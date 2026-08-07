@@ -127,22 +127,20 @@ input,select,textarea{font-family:inherit;font-size:15px}
 .valor-inp{width:100%;padding:9px 11px;border:1.5px solid var(--borda);border-radius:9px;background:#FFFDF4;color:var(--texto);outline:none;margin-bottom:7px}
 .valor-inp:focus{border-color:var(--parcial);background:#fff;box-shadow:0 0 0 3px rgba(224,134,0,.1)}
 
-/* ---------- Módulo de fotos ---------- */
-.fotos{margin-top:14px;padding-top:12px;border-top:2px dashed var(--borda-2)}
-.fotos-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
-.fotos-cab .tt{font-size:12px;font-weight:800;color:var(--azul-escuro);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
-.fotos-cab .tt .cnt{background:var(--azul);color:#fff;border-radius:20px;font-size:10.5px;padding:1px 8px}
-.fotos-btns{display:flex;gap:8px}
-.fb{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid var(--azul);background:var(--azul-tint);color:var(--azul-escuro);padding:11px;border-radius:11px;font-size:13px;font-weight:700}
-.fb:active{transform:scale(.98)}
-.fb svg{width:18px;height:18px}
-.fb.cam{background:var(--azul);color:#fff;border-color:var(--azul)}
-.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+/* ---------- Módulo de fotos (por item) ---------- */
+.fotos-item{margin-top:10px;padding-top:10px;border-top:1px dashed var(--borda-2)}
+.fotos-btns-mini{display:flex;gap:8px;margin-bottom:10px}
+.fb-mini{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--azul);background:var(--azul-tint);color:var(--azul-escuro);padding:8px 10px;border-radius:9px;font-size:12px;font-weight:700}
+.fb-mini:active{transform:scale(.98)}
+.fb-mini svg{width:16px;height:16px}
+.fb-mini.cam{background:var(--azul);color:#fff;border-color:var(--azul)}
+.galeria-mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.foto-vazio-mini{font-size:11.5px;color:var(--texto-2);text-align:center;padding:8px;background:var(--bg);border-radius:8px;grid-column:1/-1}
 .foto-card{border:1px solid var(--borda);border-radius:11px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(9,45,79,.07)}
 .foto-card .imgwrap{position:relative;aspect-ratio:4/3;background:#eaf0f5}
 .foto-card .imgwrap img{width:100%;height:100%;object-fit:cover;display:block}
-.foto-card .del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(198,40,40,.92);color:#fff;border:none;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
-.foto-card .legenda{width:100%;border:none;border-top:1px solid var(--borda);padding:8px 9px;font-size:12px;color:var(--texto);outline:none;background:#fff}
+.foto-card .del{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(198,40,40,.92);color:#fff;border:none;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+.foto-card .legenda{width:100%;border:none;border-top:1px solid var(--borda);padding:7px 8px;font-size:11.5px;color:var(--texto);outline:none;background:#fff}
 .foto-card .legenda:focus{background:#fbfdff}
 .fotos-vazio{font-size:12px;color:var(--texto-2);text-align:center;padding:10px;background:var(--azul-tint);border-radius:9px;margin-top:10px}
 
@@ -591,7 +589,7 @@ function iniciais(n){ return (n||'?').trim().slice(0,2).toUpperCase(); }
    ===================================================================== */
 let usuario = null;
 let estado  = { meta:{}, itens:{} };
-let imagens = [];              // [{_id, secaoId, legenda, dataUrl}]
+let imagens = [];              // [{_id, itemId, legenda, dataUrl}]
 let logoLocal = null;          
 let pendentesImg = [];         
 
@@ -604,17 +602,15 @@ const API = {
   get: async (u) => {
     const { data, error } = await supabaseClient.from('checklists').select('*').eq('usuario', u).single();
     if (error && error.code !== 'PGRST116') throw error;
-    // O array de imagens agora vive dentro da coluna meta para facilitar o salvamento em bloco
     if (data) return { meta: data.meta, itens: data.itens, imagens: data.meta.imagens || [] };
     return { meta: {}, itens: {}, imagens: [] };
   },
   put: async (u, body) => {
-    // Salvamos a estrutura completa no supabase
     const { data, error } = await supabaseClient
       .from('checklists')
       .upsert({ 
         usuario: u, 
-        meta: { ...body.meta, imagens: body.imagens }, // Integra as imagens no meta
+        meta: { ...body.meta, imagens: body.imagens },
         itens: body.itens, 
         atualizado_em: new Date().toISOString() 
       });
@@ -622,23 +618,19 @@ const API = {
     return data;
   },
   addImg: async (body) => {
-    // 1. Converter Base64 gerado pelo canvas para Blob
     const base64str = body.dataUrl.split(',')[1];
     const byteString = atob(base64str);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
     for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-    const blob = new Blob([ab], { type: 'image/jpeg' }); // Regra da Policy exigindo JPG
+    const blob = new Blob([ab], { type: 'image/jpeg' });
 
-    // 2. Gerar caminho obedecendo a policy: public/nome_do_arquivo.jpg
     const nomeLimpo = body.usuario.replace(/\s+/g, '_').toLowerCase();
     const fileName = `public/${nomeLimpo}_${Date.now()}.jpg`;
 
-    // 3. Fazer o Upload para o Storage
     const { data, error } = await supabaseClient.storage.from('fotos_checklist').upload(fileName, blob, { contentType: 'image/jpeg' });
     if (error) throw error;
 
-    // 4. Pegar a URL pública gerada
     const { data: urlData } = supabaseClient.storage.from('fotos_checklist').getPublicUrl(fileName);
     return { _id: fileName, dataUrl: urlData.publicUrl };
   },
@@ -704,7 +696,7 @@ async function carregarDoServidor(){
     const cache=lerCache();
     if(cache){ 
       if(cache.estado){ estado=cache.estado; imagens=cache.imagens||[]; }
-      else { estado=cache; imagens=[]; } // Fallback estrutura antiga
+      else { estado=cache; imagens=[]; } 
     }
     setSync('off','Offline — usando dados locais');
   }
@@ -753,6 +745,7 @@ function renderCheck(sec){
       <div class="chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     </div><div class="secao-body"></div></div>`);
   const body=secao.querySelector('.secao-body');
+  
   sec.itens.forEach((it,idx)=>{
     const id=sec.id+'_'+idx;
     const d=estado.itens[id]||{s:'',obs:'',val:''};
@@ -760,13 +753,26 @@ function renderCheck(sec){
     const norma=it[1]?`<span class="item-norma">${esc(it[1])}</span>`:'';
     const segs=STATUS.map(st=>`<span class="s-${st.k}"><input type="radio" name="st_${id}" id="st_${id}_${st.k}" value="${st.k}" ${d.s===st.k?'checked':''}><label for="st_${id}_${st.k}">${st.l}</label></span>`).join('');
     const valorInp=temValor?`<input class="valor-inp" data-val="${id}" value="${esc(d.val||'')}" placeholder="📏 ${esc(it[2])}">`:'';
+    
+    // Bloco de fotos individualizado por item
+    const blocoFotos = `
+      <div class="fotos-item">
+        <div class="fotos-btns-mini">
+          <button class="fb-mini cam" onclick="abrirCamera('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Câmera</button>
+          <button class="fb-mini" onclick="abrirGaleria('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Arquivo</button>
+        </div>
+        <div class="galeria-mini" data-galeria="${id}"></div>
+      </div>
+    `;
+
     body.appendChild(el(`<div class="item ${temValor?'tem-valor':''}">
       <div class="item-top"><span class="item-num">${idx+1}</span><div class="item-txt">${esc(it[0])}${norma}</div></div>
       <div class="seg">${segs}</div>${valorInp}
       <input class="item-obs" data-obs="${id}" value="${esc(d.obs||'')}" placeholder="Observações...">
+      ${blocoFotos}
     </div>`));
   });
-  body.appendChild(renderFotos(sec.id));
+  
   body.addEventListener('change',e=>{
     if(e.target.type==='radio'){ const id=e.target.name.slice(3); estado.itens[id]=estado.itens[id]||{s:'',obs:'',val:''}; estado.itens[id].s=e.target.value; agendarSalvar(); atualizarResumo(); }
   });
@@ -778,25 +784,10 @@ function renderCheck(sec){
   return secao;
 }
 
-function renderFotos(secaoId){
-  const wrap=el(`<div class="fotos" data-fotos="${secaoId}">
-    <div class="fotos-cab">
-      <div class="tt">Registro fotográfico <span class="cnt" data-fcnt="${secaoId}">0</span></div>
-    </div>
-    <div class="fotos-btns">
-      <button class="fb cam" onclick="abrirCamera('${secaoId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Câmera</button>
-      <button class="fb" onclick="abrirGaleria('${secaoId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Dispositivo</button>
-    </div>
-    <div class="galeria" data-galeria="${secaoId}"></div>
-  </div>`);
-  return wrap;
-}
-
-function renderGaleria(secaoId){
-  const g=document.querySelector(`[data-galeria="${secaoId}"]`); if(!g)return;
-  const lista=imagens.filter(i=>i.secaoId===secaoId);
-  const cnt=document.querySelector(`[data-fcnt="${secaoId}"]`); if(cnt) cnt.textContent=lista.length;
-  if(lista.length===0){ g.innerHTML=`<div class="fotos-vazio" style="grid-column:1/-1">Nenhuma foto nesta seção ainda.</div>`; return; }
+function renderGaleria(itemId){
+  const g=document.querySelector(`[data-galeria="${itemId}"]`); if(!g)return;
+  const lista=imagens.filter(i=>i.itemId===itemId);
+  if(lista.length===0){ g.innerHTML=`<div class="foto-vazio-mini" style="grid-column:1/-1">Nenhuma foto neste item.</div>`; return; }
   g.innerHTML='';
   lista.forEach(img=>{
     const card=el(`<div class="foto-card">
@@ -806,7 +797,6 @@ function renderGaleria(secaoId){
     card.querySelector('.del').onclick=()=>removerImagem(img);
     const leg=card.querySelector('.legenda');
     let t=null;
-    // Salva a legenda diretamente no array e dispara a atualização no banco em bloco
     leg.addEventListener('input',()=>{ 
       img.legenda=leg.value; 
       clearTimeout(t); 
@@ -822,23 +812,23 @@ function abrirSecoes(a){ document.querySelectorAll('.secao').forEach(s=>s.classL
 /* =====================================================================
    FOTOS — captura (câmera/galeria), compressão e upload
    ===================================================================== */
-let secaoUpload=null;
-function abrirCamera(secaoId){ secaoUpload=secaoId; document.getElementById('camInput').click(); }
-function abrirGaleria(secaoId){ secaoUpload=secaoId; document.getElementById('galInput').click(); }
+let itemUpload=null;
+function abrirCamera(itemId){ itemUpload=itemId; document.getElementById('camInput').click(); }
+function abrirGaleria(itemId){ itemUpload=itemId; document.getElementById('galInput').click(); }
 
 document.getElementById('camInput').addEventListener('change',e=>processarArquivos(e.target.files, e.target));
 document.getElementById('galInput').addEventListener('change',e=>processarArquivos(e.target.files, e.target));
 
 async function processarArquivos(files, inputEl){
-  const secaoId=secaoUpload; if(!secaoId||!files||!files.length){ return; }
+  const itemId=itemUpload; if(!itemId||!files||!files.length){ return; }
   toast('Processando '+files.length+' foto(s)…');
   for(const f of Array.from(files)){
     try{
       const dataUrl=await comprimirImagem(f);
-      await enviarImagem(secaoId, dataUrl);
+      await enviarImagem(itemId, dataUrl);
     }catch(err){ toast('Erro ao processar imagem'); }
   }
-  renderGaleria(secaoId);
+  renderGaleria(itemId);
   if(inputEl) inputEl.value='';
 }
 
@@ -853,7 +843,7 @@ function comprimirImagem(file, maxDim=1400, quality=0.68){
         else if(h>=w && h>maxDim){ w=Math.round(w*maxDim/h); h=maxDim; }
         const c=document.createElement('canvas'); c.width=w; c.height=h;
         c.getContext('2d').drawImage(img,0,0,w,h);
-        res(c.toDataURL('image/jpeg',quality)); // Output sempre JPEG, conforme a policy exige
+        res(c.toDataURL('image/jpeg',quality));
       };
       img.onerror=rej; img.src=rdr.result;
     };
@@ -861,16 +851,16 @@ function comprimirImagem(file, maxDim=1400, quality=0.68){
   });
 }
 
-async function enviarImagem(secaoId, dataUrl){
-  const local={ secaoId, legenda:'', dataUrl, _pendente:true };
+async function enviarImagem(itemId, dataUrl){
+  const local={ itemId, legenda:'', dataUrl, _pendente:true };
   imagens.push(local);
-  renderGaleria(secaoId);
+  renderGaleria(itemId);
   try{
-    const salvo=await API.addImg({ usuario, secaoId, legenda:'', dataUrl });
+    const salvo=await API.addImg({ usuario, itemId, legenda:'', dataUrl });
     local._id = salvo._id; 
-    local.dataUrl = salvo.dataUrl; // Substitui o base64 pela URL oficial do bucket
+    local.dataUrl = salvo.dataUrl; 
     delete local._pendente;
-    agendarSalvar(); // Garante que a URL pública é salva na tabela checklists
+    agendarSalvar(); 
     setSync('ok','Sincronizado');
   }catch(e){
     pendentesImg.push(local);
@@ -881,8 +871,8 @@ async function enviarImagem(secaoId, dataUrl){
 async function removerImagem(img){
   if(!confirm('Remover esta foto?')) return;
   imagens=imagens.filter(i=>i!==img);
-  renderGaleria(img.secaoId);
-  agendarSalvar(); // Remove do array no supabase
+  renderGaleria(img.itemId);
+  agendarSalvar(); 
   if(img._id && !img._pendente){ try{ await API.delImg(img._id); }catch(e){} }
 }
 
@@ -892,7 +882,7 @@ async function reenviarPendentes(){
   const fila=[...pendentesImg]; pendentesImg=[];
   for(const local of fila){
     try{ 
-      const s=await API.addImg({usuario,secaoId:local.secaoId,legenda:local.legenda||'',dataUrl:local.dataUrl}); 
+      const s=await API.addImg({usuario, itemId:local.itemId, legenda:local.legenda||'', dataUrl:local.dataUrl}); 
       local._id=s._id; local.dataUrl=s.dataUrl; delete local._pendente; 
     }catch(e){ pendentesImg.push(local); }
   }
@@ -952,7 +942,10 @@ function atualizarResumo(){
     if(mini) mini.style.width=(s.total?s.feitos/s.total*100:0)+'%';
     if(lab) lab.textContent=s.feitos+'/'+s.total;
   }
-  document.querySelectorAll('[data-galeria]').forEach(g=>{ const sid=g.getAttribute('data-galeria'); const n=imagens.filter(i=>i.secaoId===sid).length; const c2=document.querySelector(`[data-fcnt="${sid}"]`); if(c2)c2.textContent=n; if(!g.children.length) renderGaleria(sid); });
+  document.querySelectorAll('[data-galeria]').forEach(g=>{ 
+    const itemId=g.getAttribute('data-galeria'); 
+    if(!g.children.length) renderGaleria(itemId); 
+  });
 }
 
 /* =====================================================================
@@ -985,7 +978,7 @@ async function abrirRegistros(){
       const itens=d.itens||{}; const feitos=Object.values(itens).filter(x=>x&&x.s).length;
       const pct=totalItens?Math.round(feitos/totalItens*100):0;
       const emp=(d.meta&&d.meta.empresa)?d.meta.empresa:'—';
-      const dt=d.atualizado_em?new Date(d.atualizado_em).toLocaleString('pt-BR'):'—'; // Ajustado para atualizado_em do PG
+      const dt=d.atualizado_em?new Date(d.atualizado_em).toLocaleString('pt-BR'):'—';
       return `<div class="reg">
         <div class="av" style="background:${corAvatar(d.usuario)}">${iniciais(d.usuario)}</div>
         <div class="info"><div class="n">${esc(d.usuario)}</div><div class="d">${esc(emp)} · ${feitos}/${totalItens} itens · ${dt}</div></div>
@@ -1021,17 +1014,24 @@ function gerarRelatorio(){
     if(sec.tipo!=='check')return;
     let linhas='';
     sec.itens.forEach((it,idx)=>{
-      const d=estado.itens[sec.id+'_'+idx]||{s:'',obs:'',val:''};
+      const id=sec.id+'_'+idx;
+      const d=estado.itens[id]||{s:'',obs:'',val:''};
       const sitCls=d.s?'sit-'+d.s:'sit-vazio'; let obs=esc(d.obs||'');
       if(d.val) obs=(obs?obs+' · ':'')+'<b>'+esc(d.val)+'</b>';
       linhas+=`<tr><td class="c-item">${esc(it[0])}</td><td class="c-norma">${esc(it[1]||'—')}</td><td class="c-sit ${sitCls}">${STATUS_REL[d.s||'']}</td><td class="c-obs">${obs||'—'}</td></tr>`;
     });
-    const fotos=imagens.filter(i=>i.secaoId===sec.id);
+    
+    // Filtra todas as fotos cujos itens pertencem a esta seção
+    const fotosSecao=imagens.filter(i=>(i.itemId || '').startsWith(sec.id + '_'));
     let blocoFotos='';
-    if(fotos.length){
-      blocoFotos=`<div class="rel-fotos-tt">Registro fotográfico (${fotos.length})</div><div class="rel-fotos">`+
-        fotos.map((f,i)=>`<figure><img src="${f.dataUrl}"><figcaption>Foto ${i+1}${f.legenda?': '+esc(f.legenda):''}</figcaption></figure>`).join('')+`</div>`;
+    if(fotosSecao.length){
+      blocoFotos=`<div class="rel-fotos-tt">Registro fotográfico da seção (${fotosSecao.length})</div><div class="rel-fotos">`+
+        fotosSecao.map((f)=>{
+           const numDoItem = parseInt(f.itemId.split('_')[1]) + 1;
+           return `<figure><img src="${f.dataUrl}"><figcaption>Item ${numDoItem}${f.legenda?': '+esc(f.legenda):''}</figcaption></figure>`;
+        }).join('')+`</div>`;
     }
+    
     h+=`<div class="rel-secao"><h2>${sec.cod} · ${esc(sec.titulo)}</h2>
       <table class="rel-tab"><thead><tr><th class="c-item">Item verificado</th><th class="c-norma">Norma</th><th class="c-sit">Situação</th><th class="c-obs">Observações / valor</th></tr></thead>
       <tbody>${linhas}</tbody></table>${blocoFotos}</div>`;
@@ -1073,7 +1073,7 @@ window.addEventListener('beforeunload', ()=>{ if(usuario) salvarCache(); });
   montarGate();
   try{ const lg=localStorage.getItem('cme_logo'); if(lg){ logoLocal=lg; } }catch(e){}
   let anterior=null; try{ anterior=localStorage.getItem('cme_usuario_atual'); }catch(e){}
-  if(anterior){ entrar(anterior); } // reentra automaticamente
+  if(anterior){ entrar(anterior); } 
 })();
 </script>
 </body>
