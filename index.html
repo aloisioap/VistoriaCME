@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A5FA4">
+<title>Checklist de Visita Técnica — CME | SESPA</title>
+<style>
+:root{
+  --azul:#0A5FA4; --azul-2:#0B6FBE; --azul-escuro:#063E6B;
+  --verde:#3DA935; --verde-escuro:#2E7D28; --verde-tint:#EDF7EA;
+  --azul-tint:#EAF3FB;
+  --bg:#EEF3F8; --card:#FFFFFF; --texto:#16334B; --texto-2:#5D7488;
+  --borda:#D8E3ED; --borda-2:#C3D3E0;
+  --ok:#2E7D28; --nao:#C62828; --parcial:#E08600; --na:#68798A;
+  --sombra:0 1px 3px rgba(9,45,79,.08),0 4px 14px rgba(9,45,79,.06);
+  --raio:14px;
+  --ff: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:var(--ff);color:var(--texto);background:var(--bg);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom)}
+h1,h2,h3,h4{margin:0;font-weight:700;line-height:1.25}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:15px}
+
+/* ---------- Cabeçalho institucional ---------- */
+.brasao-bar{background:linear-gradient(135deg,var(--azul-escuro),var(--azul) 55%,var(--azul-2));color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 16px 14px}
+.brasao-wrap{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:13px}
+.brasao{width:52px;height:52px;flex:0 0 auto;border-radius:11px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;cursor:pointer}
+.brasao img{width:100%;height:100%;object-fit:contain}
+.brasao .mono{font-weight:800;font-size:12px;letter-spacing:.5px;text-align:center;line-height:1.05}
+.brasao .add{position:absolute;bottom:2px;right:3px;font-size:9px;opacity:.85}
+.brasao-txt .l1{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;opacity:.9;font-weight:600}
+.brasao-txt .l2{font-size:17px;font-weight:800;letter-spacing:.2px;margin-top:1px}
+.brasao-txt .l3{font-size:11.5px;opacity:.92;margin-top:1px}
+.faixa-verde{height:4px;background:linear-gradient(90deg,var(--verde),var(--verde-escuro))}
+
+.titulo-doc{background:var(--card);border-bottom:1px solid var(--borda)}
+.titulo-doc .inner{max-width:920px;margin:0 auto;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.titulo-doc h1{font-size:17px;color:var(--azul-escuro)}
+.titulo-doc p{margin:3px 0 0;color:var(--texto-2);font-size:12px}
+.user-chip{flex:0 0 auto;display:flex;align-items:center;gap:8px;background:var(--verde-tint);border:1px solid #cbe8c2;border-radius:22px;padding:6px 8px 6px 12px}
+.user-chip .av{width:26px;height:26px;border-radius:50%;background:var(--verde-escuro);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.user-chip .nm{font-size:12.5px;font-weight:700;color:var(--verde-escuro)}
+.user-chip button{border:none;background:transparent;color:var(--verde-escuro);font-size:11px;font-weight:700;text-decoration:underline;padding:0}
+
+/* ---------- Barra de ações fixa ---------- */
+.toolbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(8px);-webkit-backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--borda);box-shadow:0 2px 8px rgba(9,45,79,.05)}
+.toolbar .inner{max-width:920px;margin:0 auto;padding:9px 12px}
+.progress-line{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.progress-track{flex:1;height:9px;border-radius:6px;background:#dbe6f0;overflow:hidden}
+.progress-fill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--verde),var(--verde-escuro));transition:width .35s ease}
+.progress-num{font-size:12px;font-weight:700;color:var(--azul-escuro);white-space:nowrap;min-width:96px;text-align:right}
+.acoes{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.acoes::-webkit-scrollbar{display:none}
+.btn{border:1px solid var(--borda-2);background:#fff;color:var(--azul-escuro);padding:8px 13px;border-radius:10px;font-size:13px;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto}
+.btn:active{transform:scale(.97)}
+.btn svg{width:15px;height:15px}
+.btn-azul{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn-verde{background:var(--verde-escuro);border-color:var(--verde-escuro);color:#fff}
+
+.sync{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;margin-top:8px}
+.sync .pt{width:9px;height:9px;border-radius:50%;background:var(--verde)}
+.sync.off .pt{background:var(--parcial)}
+.sync.err .pt{background:var(--nao)}
+.sync .tx{color:var(--texto-2)}
+
+.container{max-width:920px;margin:0 auto;padding:14px 12px 40px}
+
+/* ---------- Painel resumo ---------- */
+.dash{background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);box-shadow:var(--sombra);padding:14px;margin-bottom:14px}
+.dash h3{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--texto-2);margin-bottom:11px}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{text-align:center;padding:10px 4px;border-radius:11px;background:var(--azul-tint)}
+.stat .n{font-size:22px;font-weight:800;line-height:1}
+.stat .l{font-size:10.5px;color:var(--texto-2);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.stat.ok{background:var(--verde-tint)} .stat.ok .n{color:var(--ok)}
+.stat.parcial{background:#FDF3E3} .stat.parcial .n{color:var(--parcial)}
+.stat.nao{background:#FBEAEA} .stat.nao .n{color:var(--nao)}
+.stat.na .n{color:var(--na)}
+.conf-badge{margin-top:12px;padding:11px 13px;border-radius:11px;background:var(--azul-escuro);color:#fff;display:flex;justify-content:space-between;align-items:center}
+.conf-badge .lbl{font-size:12px;opacity:.9;font-weight:600}
+.conf-badge .val{font-size:19px;font-weight:800}
+
+/* ---------- Seções ---------- */
+.secao{background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);box-shadow:var(--sombra);margin-bottom:12px;overflow:hidden}
+.secao-head{display:flex;align-items:center;gap:11px;padding:14px 15px;cursor:pointer;border-left:5px solid var(--azul);background:linear-gradient(90deg,var(--azul-tint),#fff 70%)}
+.secao-head .cod{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.secao-head .txt{flex:1;min-width:0}
+.secao-head .txt h2{font-size:14.5px;color:var(--azul-escuro)}
+.secao-head .txt .meta{font-size:11.5px;color:var(--texto-2);margin-top:2px}
+.secao-head .prog{flex:0 0 auto;text-align:right;margin-right:4px}
+.secao-head .prog .mini{width:52px;height:6px;border-radius:4px;background:#dbe6f0;overflow:hidden;margin-bottom:3px}
+.secao-head .prog .mini i{display:block;height:100%;width:0;background:var(--verde);border-radius:4px;transition:width .3s}
+.secao-head .prog span{font-size:10.5px;color:var(--texto-2);font-weight:700}
+.secao-head .chev{flex:0 0 auto;color:var(--azul);transition:transform .25s}
+.secao.aberta .secao-head .chev{transform:rotate(180deg)}
+.secao-body{display:none;padding:4px 13px 14px}
+.secao.aberta .secao-body{display:block}
+
+/* ---------- Campos ---------- */
+.campo{margin-top:12px}
+.campo label{display:block;font-size:12px;font-weight:700;color:var(--azul-escuro);margin-bottom:5px}
+.campo input,.campo select,.campo textarea{width:100%;padding:11px 12px;border:1.5px solid var(--borda-2);border-radius:10px;background:#fff;color:var(--texto);outline:none;transition:border-color .15s,box-shadow .15s}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--azul);box-shadow:0 0 0 3px rgba(10,95,164,.12)}
+.campo textarea{min-height:70px;resize:vertical}
+
+/* ---------- Item ---------- */
+.item{padding:13px 0;border-bottom:1px solid var(--borda)}
+.item:last-child{border-bottom:none}
+.item-top{display:flex;gap:9px;margin-bottom:9px}
+.item-num{flex:0 0 auto;font-size:11px;font-weight:800;color:#fff;background:var(--azul-2);border-radius:6px;padding:2px 6px;height:fit-content;margin-top:1px}
+.item-txt{flex:1;font-size:13.5px;line-height:1.4}
+.item-norma{display:inline-block;margin-top:5px;font-size:10.5px;color:var(--azul);background:var(--azul-tint);border:1px solid #cfe2f2;padding:1px 7px;border-radius:20px;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.seg label{display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 3px;border:1.5px solid var(--borda-2);border-radius:9px;background:#fff;font-size:11.5px;font-weight:700;color:var(--texto-2);cursor:pointer;transition:all .12s;user-select:none}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:active{transform:scale(.96)}
+.seg input:checked + label{color:#fff;border-color:transparent}
+.seg .s-conforme input:checked + label{background:var(--ok)}
+.seg .s-parcial input:checked + label{background:var(--parcial)}
+.seg .s-nao input:checked + label{background:var(--nao)}
+.seg .s-na input:checked + label{background:var(--na)}
+.item-obs{width:100%;padding:9px 11px;border:1.5px solid var(--borda);border-radius:9px;background:#F8FBFD;color:var(--texto);outline:none}
+.item-obs:focus{border-color:var(--azul);background:#fff;box-shadow:0 0 0 3px rgba(10,95,164,.1)}
+.valor-inp{width:100%;padding:9px 11px;border:1.5px solid var(--borda);border-radius:9px;background:#FFFDF4;color:var(--texto);outline:none;margin-bottom:7px}
+.valor-inp:focus{border-color:var(--parcial);background:#fff;box-shadow:0 0 0 3px rgba(224,134,0,.1)}
+
+/* ---------- Módulo de fotos ---------- */
+.fotos{margin-top:14px;padding-top:12px;border-top:2px dashed var(--borda-2)}
+.fotos-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.fotos-cab .tt{font-size:12px;font-weight:800;color:var(--azul-escuro);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+.fotos-cab .tt .cnt{background:var(--azul);color:#fff;border-radius:20px;font-size:10.5px;padding:1px 8px}
+.fotos-btns{display:flex;gap:8px}
+.fb{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid var(--azul);background:var(--azul-tint);color:var(--azul-escuro);padding:11px;border-radius:11px;font-size:13px;font-weight:700}
+.fb:active{transform:scale(.98)}
+.fb svg{width:18px;height:18px}
+.fb.cam{background:var(--azul);color:#fff;border-color:var(--azul)}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+.foto-card{border:1px solid var(--borda);border-radius:11px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(9,45,79,.07)}
+.foto-card .imgwrap{position:relative;aspect-ratio:4/3;background:#eaf0f5}
+.foto-card .imgwrap img{width:100%;height:100%;object-fit:cover;display:block}
+.foto-card .del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(198,40,40,.92);color:#fff;border:none;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+.foto-card .legenda{width:100%;border:none;border-top:1px solid var(--borda);padding:8px 9px;font-size:12px;color:var(--texto);outline:none;background:#fff}
+.foto-card .legenda:focus{background:#fbfdff}
+.fotos-vazio{font-size:12px;color:var(--texto-2);text-align:center;padding:10px;background:var(--azul-tint);border-radius:9px;margin-top:10px}
+
+/* legenda de status */
+.legenda-status{display:flex;flex-wrap:wrap;gap:8px 16px;padding:10px 13px;font-size:11.5px;color:var(--texto-2)}
+.legenda-status b{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+.dot.ok{background:var(--ok)}.dot.parcial{background:var(--parcial)}.dot.nao{background:var(--nao)}.dot.na{background:var(--na)}
+
+.rodape{text-align:center;color:var(--texto-2);font-size:11.5px;padding:22px 16px;line-height:1.6}
+.rodape b{color:var(--azul-escuro)}
+
+.help{background:var(--verde-tint);border:1px solid #cbe8c2;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;color:#2d5a27;line-height:1.5}
+.help b{color:var(--verde-escuro)}
+
+/* ---------- Gate de seleção de usuário ---------- */
+.gate{position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,var(--azul-escuro),var(--azul));display:flex;align-items:center;justify-content:center;padding:24px}
+.gate.hide{display:none}
+.gate-card{width:100%;max-width:400px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.gate-top{background:var(--azul-escuro);color:#fff;padding:22px 22px 18px;text-align:center}
+.gate-top .l1{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+.gate-top .l2{font-size:22px;font-weight:800;margin-top:2px}
+.gate-top .l3{font-size:12px;opacity:.9;margin-top:4px}
+.gate-body{padding:20px}
+.gate-body h3{font-size:14px;color:var(--azul-escuro);text-align:center;margin-bottom:4px}
+.gate-body p{font-size:12.5px;color:var(--texto-2);text-align:center;margin:0 0 16px}
+.user-btn{display:flex;align-items:center;gap:12px;width:100%;border:1.5px solid var(--borda-2);background:#fff;border-radius:13px;padding:13px 15px;margin-bottom:10px;transition:all .15s}
+.user-btn:active{transform:scale(.98)}
+.user-btn:hover{border-color:var(--azul);background:var(--azul-tint)}
+.user-btn .av{width:40px;height:40px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex:0 0 auto}
+.user-btn .nm{font-size:15px;font-weight:700;color:var(--texto);text-align:left}
+.user-btn .go{margin-left:auto;color:var(--azul)}
+.gate-outro{margin-top:6px;display:flex;gap:8px}
+.gate-outro input{flex:1;padding:11px 12px;border:1.5px solid var(--borda-2);border-radius:11px;outline:none}
+.gate-outro input:focus{border-color:var(--azul)}
+.gate-outro button{border:none;background:var(--azul);color:#fff;border-radius:11px;padding:0 16px;font-weight:700}
+
+/* ---------- Modal registros ---------- */
+.modal{position:fixed;inset:0;z-index:150;background:rgba(6,40,70,.5);display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.modal-card{width:100%;max-width:560px;background:#fff;border-radius:20px 20px 0 0;max-height:82vh;overflow:auto;padding:18px}
+.modal-card h3{font-size:16px;color:var(--azul-escuro);margin-bottom:3px}
+.modal-card .sub{font-size:12px;color:var(--texto-2);margin-bottom:14px}
+.reg{display:flex;align-items:center;gap:12px;border:1px solid var(--borda);border-radius:13px;padding:12px;margin-bottom:9px}
+.reg .av{width:38px;height:38px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex:0 0 auto}
+.reg .info{flex:1;min-width:0}
+.reg .info .n{font-weight:700;font-size:14px}
+.reg .info .d{font-size:11.5px;color:var(--texto-2);margin-top:2px}
+.reg .pc{font-size:18px;font-weight:800;color:var(--azul-escuro)}
+.modal-fechar{width:100%;border:1px solid var(--borda-2);background:#fff;border-radius:12px;padding:12px;font-weight:700;color:var(--azul-escuro);margin-top:6px}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 22px);transform:translateX(-50%) translateY(20px);background:var(--azul-escuro);color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(6,62,107,.35);opacity:0;pointer-events:none;transition:all .3s;z-index:210;max-width:88%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- RELATÓRIO / PDF ---------- */
+#relatorio{display:none}
+@media screen{ #relatorio{display:none !important} }
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  body{background:#fff;font-size:10.5pt}
+  #app,.toast,.gate,.modal{display:none !important}
+  #relatorio{display:block !important}
+  .rel-header{display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--azul);padding-bottom:9px;margin-bottom:4px}
+  .rel-header .brz{width:56px;height:56px;flex:0 0 auto;border:1px solid #ccc;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .rel-header .brz img{width:100%;height:100%;object-fit:contain}
+  .rel-header .brz .mono{font-weight:800;font-size:10px;color:var(--azul);text-align:center;line-height:1.05}
+  .rel-header .ht .l1{font-size:8.5pt;letter-spacing:1.5px;text-transform:uppercase;color:#555}
+  .rel-header .ht .l2{font-size:13pt;font-weight:800;color:var(--azul-escuro)}
+  .rel-header .ht .l3{font-size:8.5pt;color:#555}
+  .rel-faixa{height:3px;background:var(--verde);margin-bottom:11px}
+  .rel-titulo{font-size:13pt;font-weight:800;color:var(--azul-escuro);text-align:center;margin:2px 0 3px}
+  .rel-sub{text-align:center;font-size:8.5pt;color:#666;margin-bottom:12px}
+  table{width:100%;border-collapse:collapse;margin-bottom:6px}
+  .rel-meta td{border:.5pt solid #b9c9d6;padding:4px 7px;font-size:9pt;vertical-align:top}
+  .rel-meta td.k{background:#eef3f8;font-weight:700;color:var(--azul-escuro);width:32%}
+  .rel-secao{margin-top:13px}
+  .rel-secao h2{font-size:10.5pt;color:#fff;background:var(--azul);padding:5px 9px;border-radius:3px;margin-bottom:0;page-break-after:avoid}
+  .rel-tab{width:100%;border-collapse:collapse}
+  .rel-tab th{background:#e7eff6;font-size:7.8pt;text-transform:uppercase;letter-spacing:.3px;color:var(--azul-escuro);padding:4px 6px;border:.5pt solid #b9c9d6;text-align:left}
+  .rel-tab td{border:.5pt solid #cdd9e3;padding:4px 6px;font-size:8.6pt;vertical-align:top;page-break-inside:avoid}
+  .rel-tab tr{page-break-inside:avoid}
+  .c-item{width:44%}.c-norma{width:16%;font-size:7.6pt;color:#0a5fa4}.c-sit{width:14%;font-weight:700;text-align:center;white-space:nowrap}.c-obs{width:26%;font-size:8pt;color:#333}
+  .sit-conforme{color:var(--ok)}.sit-parcial{color:var(--parcial)}.sit-nao{color:var(--nao)}.sit-na{color:var(--na)}.sit-vazio{color:#aaa;font-weight:400}
+  .rel-fotos{display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;page-break-inside:auto}
+  .rel-fotos figure{width:31.5%;margin:0;page-break-inside:avoid}
+  .rel-fotos img{width:100%;border:.5pt solid #bbb;border-radius:3px;display:block}
+  .rel-fotos figcaption{font-size:7.4pt;color:#444;margin-top:2px;line-height:1.2}
+  .rel-fotos-tt{font-size:8pt;font-weight:700;color:var(--azul-escuro);margin:6px 0 2px}
+  .rel-resumo{margin-top:14px;border:1pt solid var(--azul);border-radius:5px;padding:9px 12px;page-break-inside:avoid}
+  .rel-resumo h3{font-size:10pt;color:var(--azul-escuro);margin-bottom:6px}
+  .rel-resumo .linha{display:flex;justify-content:space-between;font-size:9pt;padding:2px 0;border-bottom:.5pt dotted #ccc}
+  .rel-resumo .total{font-weight:800;font-size:10.5pt;color:var(--azul-escuro);border-bottom:none;margin-top:4px}
+  .rel-assin{display:flex;gap:40px;margin-top:34px;page-break-inside:avoid}
+  .rel-assin .a{flex:1;text-align:center;font-size:8.5pt;color:#444}
+  .rel-assin .a .ln{border-top:.7pt solid #333;margin-bottom:3px;padding-top:3px}
+  .rel-foot{margin-top:16px;text-align:center;font-size:7.5pt;color:#888;border-top:.5pt solid #ddd;padding-top:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ GATE: seleção de usuário ============ -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-top">
+      <div class="l1">Governo do Estado do Pará · SESPA</div>
+      <div class="l2">Visita Técnica — CME</div>
+      <div class="l3">Checklist de Engenharia Clínica</div>
+    </div>
+    <div class="gate-body">
+      <h3>Quem está preenchendo?</h3>
+      <p>Cada pessoa mantém o seu próprio registro. Vários podem preencher ao mesmo tempo.</p>
+      <div id="userBtns"></div>
+      <div class="gate-outro">
+        <input type="text" id="outroNome" placeholder="Outro nome...">
+        <button onclick="entrarOutro()">Entrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+
+  <div class="brasao-bar">
+    <div class="brasao-wrap">
+      <div class="brasao" id="brasaoBox" onclick="document.getElementById('logoInput').click()" title="Toque para inserir o brasão oficial">
+        <span class="mono" id="brasaoMono">GOV<br>PA</span>
+        <span class="add">＋</span>
+      </div>
+      <input type="file" id="logoInput" accept="image/*" style="display:none">
+      <div class="brasao-txt">
+        <div class="l1">Governo do Estado do Pará</div>
+        <div class="l2">SESPA</div>
+        <div class="l3">Secretaria de Estado de Saúde Pública</div>
+      </div>
+    </div>
+  </div>
+  <div class="faixa-verde"></div>
+
+  <div class="titulo-doc">
+    <div class="inner">
+      <div>
+        <h1>Checklist de Visita Técnica — CME</h1>
+        <p>Levantamento técnico · Engenharia Clínica · RDC 50/2002 · RDC 15/2012</p>
+      </div>
+      <div class="user-chip" id="userChip">
+        <div class="av" id="userAv">–</div>
+        <div>
+          <div class="nm" id="userNm">—</div>
+          <button onclick="trocarUsuario()">trocar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="inner">
+      <div class="progress-line">
+        <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+        <div class="progress-num" id="progNum">0% preenchido</div>
+      </div>
+      <div class="acoes">
+        <button class="btn btn-verde" onclick="exportarPDF()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Exportar PDF</button>
+        <button class="btn btn-azul" onclick="salvarManual()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Salvar</button>
+        <button class="btn" onclick="abrirRegistros()">Registros</button>
+        <button class="btn" onclick="abrirSecoes(true)">Expandir</button>
+        <button class="btn" onclick="abrirSecoes(false)">Recolher</button>
+      </div>
+      <div class="sync" id="sync"><span class="pt"></span><span class="tx" id="syncTx">Conectando…</span></div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="help">
+      <b>Como usar:</b> preencha durante a visita — tudo é <b>salvo automaticamente no banco</b> sob o seu nome. Em cada seção há botões de <b>Câmera</b> e <b>Dispositivo</b> para anexar fotos com legenda. Para o documento final, toque em <b>Exportar PDF</b> → escolha <b>“Salvar em PDF / Salvar em Arquivos”</b>.
+    </div>
+
+    <div class="dash">
+      <h3>Painel de conformidade</h3>
+      <div class="dash-grid">
+        <div class="stat ok"><div class="n" id="stOk">0</div><div class="l">Conforme</div></div>
+        <div class="stat parcial"><div class="n" id="stParcial">0</div><div class="l">Parcial</div></div>
+        <div class="stat nao"><div class="n" id="stNao">0</div><div class="l">Não conf.</div></div>
+        <div class="stat na"><div class="n" id="stNa">0</div><div class="l">N/A</div></div>
+      </div>
+      <div class="conf-badge">
+        <span class="lbl">Índice de conformidade (exclui N/A)</span>
+        <span class="val" id="confVal">—</span>
+      </div>
+    </div>
+
+    <div class="legenda-status">
+      <b><span class="dot ok"></span>Conforme / Presente</b>
+      <b><span class="dot parcial"></span>Parcial / A verificar</b>
+      <b><span class="dot nao"></span>Não conforme / Ausente</b>
+      <b><span class="dot na"></span>Não aplicável</b>
+    </div>
+
+    <div id="secoes"></div>
+
+    <div class="rodape">
+      <b>SESPA — Secretaria de Estado de Saúde Pública do Pará</b><br>
+      Tv. Lomas Valentinas, 2190 — Marco, Belém/PA · CEP 66093-677<br>
+      Instrumento técnico de engenharia clínica · v2.0
+    </div>
+  </div>
+</div>
+
+<!-- inputs de imagem compartilhados -->
+<input type="file" id="camInput" accept="image/*" capture="environment" style="display:none">
+<input type="file" id="galInput" accept="image/*" multiple style="display:none">
+
+<!-- Modal registros -->
+<div class="modal" id="modalReg">
+  <div class="modal-card">
+    <h3>Registros da equipe</h3>
+    <div class="sub">Todos os checklists salvos no banco de dados</div>
+    <div id="regLista"></div>
+    <button class="modal-fechar" onclick="fecharRegistros()">Fechar</button>
+  </div>
+</div>
+
+<!-- Relatório (PDF) -->
+<div id="relatorio"></div>
+
+<div class="toast" id="toast"></div>
+
+<!-- =====================================================================
+     SDK DO SUPABASE
+     ===================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* =====================================================================
+   ESTRUTURA DO CHECKLIST (base normativa CME)
+   ===================================================================== */
+const STATUS = [
+  {k:'conforme', l:'Conforme'},
+  {k:'parcial',  l:'Parcial'},
+  {k:'nao',      l:'Não conf.'},
+  {k:'na',       l:'N/A'}
+];
+const STATUS_REL = {conforme:'Conforme', parcial:'Parcial', nao:'Não conforme', na:'N/A', '':'—'};
+
+const SECOES = [
+  {
+    id:'IDENT', cod:'ID', titulo:'Identificação da Visita Técnica', tipo:'meta',
+    campos:[
+      {id:'empresa', label:'Empresa / Razão social visitada', tipo:'text', ph:'Ex.: Bioplus Comércio e Representações Ltda.'},
+      {id:'cnpj', label:'CNPJ', tipo:'text', ph:'00.000.000/0000-00'},
+      {id:'endereco', label:'Endereço', tipo:'text', ph:'Av. Cosme Ferreira, 1877 – Galpão B, Aleixo'},
+      {id:'cidade', label:'Cidade / UF', tipo:'text', ph:'Manaus / AM'},
+      {id:'data', label:'Data da visita', tipo:'date'},
+      {id:'hora', label:'Horário (início – término)', tipo:'text', ph:'09:00 – 12:00'},
+      {id:'classe', label:'Classificação do CME', tipo:'select', opcoes:['','CME Classe I','CME Classe II','A definir']},
+      {id:'modelo', label:'Modelo de operação', tipo:'select', opcoes:['','Próprio (hospitalar)','Terceirizado (comodato)','Empresa processadora','A definir']},
+      {id:'rt', label:'Responsável Técnico da empresa (nome / conselho / registro)', tipo:'text', ph:'Enf. Fulano — COREN-AM 000000'},
+      {id:'acomp', label:'Acompanhante(s) pela empresa', tipo:'text', ph:'Nome / função'},
+      {id:'engclinico', label:'Engenheiro Clínico responsável pela visita', tipo:'text', ph:'Nome — CREA/registro'},
+      {id:'equipe', label:'Equipe técnica SESPA presente', tipo:'text', ph:'Nomes e funções'},
+      {id:'objetivo', label:'Objetivo e observações gerais da visita', tipo:'textarea', ph:'Contexto, escopo do levantamento e observações relevantes...'}
+    ]
+  },
+  {
+    id:'FIS', cod:'01', titulo:'Estrutura Física e Layout Funcional', tipo:'check',
+    ref:'RDC 50/2002 · RDC 15/2012 (arts. 45–58)',
+    itens:[
+      ['Fluxo unidirecional sujo → limpo → estéril, sem cruzamento ou refluxo de materiais','RDC 50 / RDC 15'],
+      ['Barreira física entre a área suja (expurgo) e a área limpa','RDC 15 art. 45'],
+      ['Área de recepção e limpeza (expurgo) delimitada e identificada','RDC 15 art. 46'],
+      ['Área/sala de preparo e acondicionamento de materiais','RDC 15 art. 51'],
+      ['Área de esterilização dimensionada conforme quantidade e porte dos equipamentos','RDC 15 art. 57'],
+      ['Área para monitoramento do processo de esterilização','RDC 15'],
+      ['Sala/área de armazenamento e distribuição de materiais estéreis','RDC 15 art. 58'],
+      ['Sala exclusiva para desinfecção química, quando houver o processo','RDC 15 art. 86'],
+      ['Barreira técnica / vestiário de acesso com paramentação','RDC 15 art. 45'],
+      ['Pisos, paredes e tetos lisos, laváveis, impermeáveis, resistentes e sem frestas','RDC 50'],
+      ['Rodapés arredondados e junções sem cantos vivos','RDC 50'],
+      ['Portas, visores e guichês de passagem entre áreas compatíveis com o fluxo','RDC 50'],
+      ['Pé-direito e área útil dos ambientes compatíveis com a demanda','RDC 50'],
+      ['Ralos adequados; ausência de ralos abertos em áreas limpas/estéreis','RDC 50'],
+      ['Níveis de iluminância adequados (especialmente bancadas de inspeção)','NBR ISO 8995-1'],
+      ['Sinalização e identificação clara das áreas e sentidos de fluxo','RDC 50'],
+      ['Área administrativa/registros fisicamente separada da área técnica',''],
+      ['Depósito de material de limpeza (DML) e local de guarda de EPI','RDC 50'],
+      ['Sanitários e vestiários dimensionados para a equipe','RDC 50'],
+      ['Área de carga/descarga para autoclave de dupla barreira, quando existente',''],
+      ['Estado geral de conservação, higiene e organização do ambiente','']
+    ]
+  },
+  {
+    id:'ELE', cod:'02', titulo:'Estrutura Elétrica', tipo:'check',
+    ref:'NBR 5410 · NBR 13534 (EAS) · NR-10 · RDC 50',
+    itens:[
+      ['Quadro de distribuição elétrica dedicado ao CME e devidamente dimensionado','NBR 5410'],
+      ['Circuitos independentes/exclusivos para autoclaves e lavadoras (alta potência)','NBR 5410'],
+      ['Sistema de aterramento e equalização de potencial (requisitos para EAS)','NBR 13534'],
+      ['Dispositivos DR (diferencial-residual) instalados','NBR 5410'],
+      ['Dispositivos de proteção contra surtos (DPS)','NBR 5410'],
+      ['Fonte de energia de emergência (grupo gerador / no-break) para equipamentos críticos','RDC 50'],
+      ['Iluminação de emergência nas áreas técnicas','NBR 10898'],
+      ['Tomadas dimensionadas, identificadas por circuito e em quantidade suficiente','NBR 5410'],
+      ['Capacidade instalada compatível com a carga total dos equipamentos','NBR 5410','kVA/kW instalados'],
+      ['Previsão de demanda futura / margem para expansão','','Reserva prevista'],
+      ['Cabeamento estruturado / pontos de rede para o sistema de rastreabilidade',''],
+      ['Instalações sem improvisos, emendas expostas ou sinais de sobrecarga','NR-10'],
+      ['Laudo/ART das instalações elétricas e prontuário NR-10 disponíveis','NR-10'],
+      ['Quadros identificados, com circuitos sinalizados e livre acesso','NR-10']
+    ]
+  },
+  {
+    id:'MEC', cod:'03', titulo:'Estrutura Mecânica, Hidráulica e Utilidades', tipo:'check',
+    ref:'RDC 15 (arts. 54–56, 68–69) · NBR 7256 · NR-13 · GM/MS 888/2021',
+    itens:[
+      ['Sistema de tratamento de água (osmose reversa / deionização) instalado','RDC 15 art. 68'],
+      ['Água potável para lavagem conforme padrão de potabilidade','GM/MS 888/2021'],
+      ['Água purificada no enxágue final de críticos (implantes, oftálmicos, cardíacos, neuro)','RDC 15 art.68 §ú'],
+      ['Laudos periódicos da qualidade da água (físico-químico e microbiológico)','RDC 15'],
+      ['Reservatório de água com higienização periódica registrada','GM/MS 888/2021'],
+      ['Geração de vapor (caldeira / gerador de vapor) para esterilização','NBR ISO 17665'],
+      ['Qualidade do vapor / vapor limpo adequado às autoclaves','NBR ISO 17665'],
+      ['NR-13: prontuário do vaso de pressão/caldeira e das autoclaves disponível','NR-13'],
+      ['NR-13: válvula de segurança, dispositivos e placa de identificação íntegros','NR-13'],
+      ['NR-13: inspeções de segurança periódicas em dia (laudos vigentes)','NR-13'],
+      ['NR-13: operador/profissional habilitado para operação, quando exigível','NR-13'],
+      ['Ar comprimido / pistola de ar para secagem de lúmens','RDC 15 art. 69'],
+      ['Qualidade do ar comprimido (isento de óleo e umidade) e filtragem','RDC 15'],
+      ['Climatização da sala de preparo e esterilização conforme normatização','RDC 15 art.54 / NBR 7256'],
+      ['Sala de desinfecção química: vazão mínima de ar total de 18 m³/h/m²','RDC 15 art. 56'],
+      ['Sala de desinfecção química: pressão diferencial negativa mínima de 2,5 Pa','RDC 15 art. 56'],
+      ['Sala de desinfecção química: exaustão forçada de todo o ar da sala','RDC 15 art. 56'],
+      ['Controle de temperatura e umidade nas áreas técnicas','NBR 7256'],
+      ['Sistema de exaustão de calor na área de esterilização',''],
+      ['Filtragem de ar e manutenção/limpeza do sistema de climatização registrada','NBR 7256'],
+      ['Rede hidráulica e de esgoto adequada, com pontos suficientes nas bancadas','RDC 50']
+    ]
+  },
+  {
+    id:'EQP', cod:'04', titulo:'Equipamentos e Parque Tecnológico', tipo:'check',
+    ref:'RDC 15 (art. 37, 67) · NBR ISO 17665 · NBR ISO 15883',
+    itens:[
+      ['Autoclaves a vapor saturado — quantidade e capacidade de câmara','RDC 15','Nº de autoclaves e litragem'],
+      ['Autoclaves tipo pré-vácuo (cargas porosas/canulados), quando aplicável','NBR ISO 17665'],
+      ['Lavadora termodesinfectadora automatizada','NBR ISO 15883'],
+      ['Lavadora ultrassônica','NBR ISO 15883'],
+      ['Lavadora ultrassônica com conector p/ canulados e fluxo intermitente (lúmen < 5 mm)','RDC 15 art.67 §ú'],
+      ['Seladora(s) térmica(s) para embalagens','RDC 15'],
+      ['Gabinete / estufa de secagem',''],
+      ['Esterilização a baixa temperatura (peróxido de hidrogênio/plasma ou ETO), se houver','RDC 15'],
+      ['Qualificação de Instalação (QI) dos equipamentos','RDC 15 art. 37'],
+      ['Qualificação de Operação (QO) dos equipamentos','RDC 15 art. 37'],
+      ['Qualificação de Desempenho (QD) dos equipamentos','RDC 15 art. 37'],
+      ['Qualificação térmica e calibração periódica realizadas','RDC 15'],
+      ['Registro/impressão automática dos parâmetros de cada ciclo','RDC 15'],
+      ['Plano de manutenção preventiva e corretiva com registros (engenharia clínica)',''],
+      ['Calibração de instrumentos de medição (manômetros, termômetros, sensores)',''],
+      ['Instrumentais, caixas, cestos e containers em quantidade e estado adequados',''],
+      ['Carros de transporte fechados e identificados (limpo e sujo separados)','RDC 15'],
+      ['Registro ANVISA dos equipamentos, saneantes e insumos utilizados','RDC 15']
+    ]
+  },
+  {
+    id:'CAP', cod:'05', titulo:'Capacidade de Produção', tipo:'check',
+    ref:'Levantamento operacional / dimensionamento',
+    itens:[
+      ['Volume médio processado por dia (pacotes/caixas)','','Unidades/dia'],
+      ['Volume médio processado por mês','','Unidades/mês'],
+      ['Número de ciclos por autoclave por dia','','Ciclos/dia'],
+      ['Capacidade de carga por ciclo (por equipamento)','','Carga/ciclo'],
+      ['Tempo médio de ciclo — lavagem automatizada','','Minutos'],
+      ['Tempo médio de ciclo — esterilização','','Minutos'],
+      ['Regime de funcionamento / turnos','','Ex.: 12h, 24h'],
+      ['Capacidade instalada x demanda atendida (folga operacional)','','% de folga'],
+      ['Capacidade de expansão / atendimento a novas unidades','','Estimativa'],
+      ['Indicadores de produtividade e histórico de reprocessamento monitorados',''],
+      ['Plano de contingência para falha de equipamento ou demanda de pico','']
+    ]
+  },
+  {
+    id:'RH', cod:'06', titulo:'Corpo Técnico e Recursos Humanos', tipo:'check',
+    ref:'RDC 15 (arts. 28–33) · NR-32 · NR-6',
+    itens:[
+      ['Profissional Responsável de nível superior pela coordenação do CME','RDC 15 art. 28'],
+      ['No CME Classe II, o responsável atua exclusivamente na unidade','RDC 15 art.28 §ú'],
+      ['Quadro de enfermeiros dimensionado por turno','RDC 15','Nº por turno'],
+      ['Quadro de técnicos/auxiliares de enfermagem por turno','RDC 15','Nº por turno'],
+      ['Dimensionamento de pessoal compatível com demanda e turnos',''],
+      ['Programa de capacitação periódica documentado','RDC 15 art. 29'],
+      ['Capacitação em limpeza, desinfecção, preparo, embalagem e esterilização','RDC 15 art.29 IV'],
+      ['Capacitação em monitoramento por indicadores químicos, biológicos e físicos','RDC 15 art.29 V'],
+      ['Capacitação em rastreabilidade, armazenamento e distribuição','RDC 15 art.29 VI'],
+      ['Uso correto e disponibilidade de EPI conforme a atividade','RDC 15 art.30 / NR-32'],
+      ['Programa de saúde ocupacional — PCMSO e imunização da equipe','NR-32'],
+      ['Suporte de engenharia clínica / responsável técnico por equipamentos',''],
+      ['Atribuições e escalas formalmente designadas e divulgadas','RDC 15 art. 33']
+    ]
+  },
+  {
+    id:'PRO', cod:'07', titulo:'Processos, Qualidade e Rastreabilidade', tipo:'check',
+    ref:'RDC 15 · NBR ISO 11140/11138 · RDC 222/2018',
+    itens:[
+      ['POP para cada etapa do processamento, atualizado e disponível para consulta','RDC 15 art. 24'],
+      ['Monitoramento com indicadores químicos por classe','NBR ISO 11140'],
+      ['Monitoramento com indicadores biológicos','NBR ISO 11138'],
+      ['Teste Bowie-Dick diário nas autoclaves pré-vácuo','RDC 15'],
+      ['Monitoramento físico (registro de parâmetros) de cada ciclo','RDC 15'],
+      ['Critérios formais de liberação de carga documentados','RDC 15'],
+      ['Software de rastreabilidade cobrindo todas as etapas (entrada → distribuição)','RDC 15'],
+      ['Rastreabilidade por lote e vínculo com paciente/unidade','RDC 15'],
+      ['Controle do prazo de validade dos pacotes esterilizados','RDC 15'],
+      ['Rotulagem com informações obrigatórias (lote, data, validade, responsável)','RDC 15 arts.84–85'],
+      ['Registros de validação e requalificação de processos','RDC 15 art. 37'],
+      ['Gerenciamento de resíduos — PGRSS implantado','RDC 222/2018'],
+      ['Controle de qualidade documentado e auditorias periódicas','RDC 15'],
+      ['Tratamento de não conformidades e ações de melhoria contínua','']
+    ]
+  },
+  {
+    id:'DOC', cod:'08', titulo:'Documentação, Regularização e Segurança do Trabalho', tipo:'check',
+    ref:'Licenciamento · Responsabilidade técnica · NRs',
+    itens:[
+      ['Licença/alvará sanitário vigente para a atividade',''],
+      ['Responsabilidade Técnica registrada no conselho profissional',''],
+      ['Manuais de operação dos equipamentos disponíveis',''],
+      ['Contratos de manutenção e assistência técnica vigentes',''],
+      ['Laudos arquivados: água, elétrica (ART/NR-10), NR-13 e climatização',''],
+      ['Certificados de calibração dos instrumentos de medição',''],
+      ['ART/RRT dos projetos (arquitetônico, elétrico, hidrossanitário, climatização)',''],
+      ['PGRSS e comprovação de destinação final de resíduos','RDC 222/2018'],
+      ['Comissão/Comitê de Processamento constituído, quando aplicável','RDC 15 art. 8'],
+      ['Documentação de qualificação da empresa (quando terceirizada)','RDC 15 art.33 §ú'],
+      ['Registros de treinamento e de saúde ocupacional arquivados','NR-32']
+    ]
+  }
+];
+
+const USUARIOS = ['Vanessa','Christielaine','Lorena'];
+const CORES_AV = {'Vanessa':'#0A5FA4','Christielaine':'#2E7D28','Lorena':'#8E44AD'};
+function corAvatar(n){ return CORES_AV[n] || '#0A5FA4'; }
+function iniciais(n){ return (n||'?').trim().slice(0,2).toUpperCase(); }
+
+/* =====================================================================
+   ESTADO + API SUPABASE
+   ===================================================================== */
+let usuario = null;
+let estado  = { meta:{}, itens:{} };
+let imagens = [];              // [{_id, secaoId, legenda, dataUrl}]
+let logoLocal = null;          
+let pendentesImg = [];         
+
+// === INSIRA AQUI AS CREDENCIAIS DO SUPABASE ===
+const supabaseUrl = 'URL_DO_SEU_PROJETO'; 
+const supabaseKey = 'SUA_CHAVE_ANON'; 
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+const API = {
+  get: async (u) => {
+    const { data, error } = await supabaseClient.from('checklists').select('*').eq('usuario', u).single();
+    if (error && error.code !== 'PGRST116') throw error;
+    // O array de imagens agora vive dentro da coluna meta para facilitar o salvamento em bloco
+    if (data) return { meta: data.meta, itens: data.itens, imagens: data.meta.imagens || [] };
+    return { meta: {}, itens: {}, imagens: [] };
+  },
+  put: async (u, body) => {
+    // Salvamos a estrutura completa no supabase
+    const { data, error } = await supabaseClient
+      .from('checklists')
+      .upsert({ 
+        usuario: u, 
+        meta: { ...body.meta, imagens: body.imagens }, // Integra as imagens no meta
+        itens: body.itens, 
+        atualizado_em: new Date().toISOString() 
+      });
+    if (error) throw error;
+    return data;
+  },
+  addImg: async (body) => {
+    // 1. Converter Base64 gerado pelo canvas para Blob
+    const base64str = body.dataUrl.split(',')[1];
+    const byteString = atob(base64str);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+    const blob = new Blob([ab], { type: 'image/jpeg' }); // Regra da Policy exigindo JPG
+
+    // 2. Gerar caminho obedecendo a policy: public/nome_do_arquivo.jpg
+    const nomeLimpo = body.usuario.replace(/\s+/g, '_').toLowerCase();
+    const fileName = `public/${nomeLimpo}_${Date.now()}.jpg`;
+
+    // 3. Fazer o Upload para o Storage
+    const { data, error } = await supabaseClient.storage.from('fotos_checklist').upload(fileName, blob, { contentType: 'image/jpeg' });
+    if (error) throw error;
+
+    // 4. Pegar a URL pública gerada
+    const { data: urlData } = supabaseClient.storage.from('fotos_checklist').getPublicUrl(fileName);
+    return { _id: fileName, dataUrl: urlData.publicUrl };
+  },
+  delImg: async (id) => {
+    await supabaseClient.storage.from('fotos_checklist').remove([id]);
+  },
+  todos: async () => {
+    const { data, error } = await supabaseClient.from('checklists').select('*').order('atualizado_em', { ascending: false });
+    if (error) throw error;
+    return data;
+  }
+};
+
+/* cache local por usuário */
+function chaveCache(){ return 'cme_cache_'+usuario; }
+function salvarCache(){ try{ localStorage.setItem(chaveCache(), JSON.stringify({estado, imagens})); }catch(e){} }
+function lerCache(){ try{ const r=localStorage.getItem(chaveCache()); return r?JSON.parse(r):null; }catch(e){ return null; } }
+
+/* =====================================================================
+   GATE — seleção de usuário
+   ===================================================================== */
+function montarGate(){
+  const box=document.getElementById('userBtns');
+  box.innerHTML = USUARIOS.map(n=>`
+    <button class="user-btn" onclick="entrar('${n}')">
+      <div class="av" style="background:${corAvatar(n)}">${iniciais(n)}</div>
+      <div class="nm">${n}</div>
+      <div class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </button>`).join('');
+}
+function entrarOutro(){
+  const v=document.getElementById('outroNome').value.trim();
+  if(v.length<2){ toast('Digite um nome'); return; }
+  entrar(v);
+}
+async function entrar(nome){
+  usuario = nome;
+  try{ localStorage.setItem('cme_usuario_atual', nome); }catch(e){}
+  document.getElementById('gate').classList.add('hide');
+  document.getElementById('userAv').textContent=iniciais(nome);
+  document.getElementById('userAv').style.background=corAvatar(nome);
+  document.getElementById('userNm').textContent=nome;
+  await carregarDoServidor();
+  render();
+}
+function trocarUsuario(){
+  salvarAgora(true);
+  usuario=null; estado={meta:{},itens:{}}; imagens=[]; pendentesImg=[];
+  try{ localStorage.removeItem('cme_usuario_atual'); }catch(e){}
+  document.getElementById('outroNome').value='';
+  document.getElementById('gate').classList.remove('hide');
+}
+
+async function carregarDoServidor(){
+  setSync('conectando','Carregando…');
+  try{
+    const doc = await API.get(usuario);
+    estado = { meta: doc.meta||{}, itens: doc.itens||{} };
+    imagens = doc.imagens || [];
+    salvarCache();
+    setSync('ok','Sincronizado');
+  }catch(e){
+    const cache=lerCache();
+    if(cache){ 
+      if(cache.estado){ estado=cache.estado; imagens=cache.imagens||[]; }
+      else { estado=cache; imagens=[]; } // Fallback estrutura antiga
+    }
+    setSync('off','Offline — usando dados locais');
+  }
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function render(){
+  const cont=document.getElementById('secoes'); cont.innerHTML='';
+  SECOES.forEach(sec=>{
+    cont.appendChild(sec.tipo==='meta' ? renderMeta(sec) : renderCheck(sec));
+  });
+  if(logoLocal) aplicarLogo(logoLocal);
+  atualizarResumo();
+}
+
+function renderMeta(sec){
+  const secao=el(`<div class="secao aberta" data-sec="${sec.id}">
+    <div class="secao-head" onclick="toggleSecao(this)">
+      <div class="cod">${sec.cod}</div>
+      <div class="txt"><h2>${sec.titulo}</h2><div class="meta">Dados gerais da visita</div></div>
+      <div class="chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div><div class="secao-body"></div></div>`);
+  const body=secao.querySelector('.secao-body');
+  sec.campos.forEach(c=>{
+    const val=esc(estado.meta[c.id]||''); let inner='';
+    if(c.tipo==='textarea') inner=`<textarea data-meta="${c.id}" placeholder="${esc(c.ph||'')}">${val}</textarea>`;
+    else if(c.tipo==='select') inner=`<select data-meta="${c.id}">`+c.opcoes.map(o=>`<option value="${esc(o)}" ${o===estado.meta[c.id]?'selected':''}>${o===''?'— selecione —':esc(o)}</option>`).join('')+`</select>`;
+    else inner=`<input type="${c.tipo}" data-meta="${c.id}" value="${val}" placeholder="${esc(c.ph||'')}">`;
+    body.appendChild(el(`<div class="campo"><label>${c.label}</label>${inner}</div>`));
+  });
+  body.addEventListener('input',e=>{ const k=e.target.getAttribute('data-meta'); if(!k)return; estado.meta[k]=e.target.value; agendarSalvar(); });
+  return secao;
+}
+
+function renderCheck(sec){
+  const secao=el(`<div class="secao" data-sec="${sec.id}">
+    <div class="secao-head" onclick="toggleSecao(this)">
+      <div class="cod">${sec.cod}</div>
+      <div class="txt"><h2>${sec.titulo}</h2><div class="meta">${esc(sec.ref||'')} · ${sec.itens.length} itens</div></div>
+      <div class="prog"><div class="mini"><i data-mini="${sec.id}"></i></div><span data-prog="${sec.id}">0/${sec.itens.length}</span></div>
+      <div class="chev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div><div class="secao-body"></div></div>`);
+  const body=secao.querySelector('.secao-body');
+  sec.itens.forEach((it,idx)=>{
+    const id=sec.id+'_'+idx;
+    const d=estado.itens[id]||{s:'',obs:'',val:''};
+    const temValor=it.length>2 && it[2];
+    const norma=it[1]?`<span class="item-norma">${esc(it[1])}</span>`:'';
+    const segs=STATUS.map(st=>`<span class="s-${st.k}"><input type="radio" name="st_${id}" id="st_${id}_${st.k}" value="${st.k}" ${d.s===st.k?'checked':''}><label for="st_${id}_${st.k}">${st.l}</label></span>`).join('');
+    const valorInp=temValor?`<input class="valor-inp" data-val="${id}" value="${esc(d.val||'')}" placeholder="📏 ${esc(it[2])}">`:'';
+    body.appendChild(el(`<div class="item ${temValor?'tem-valor':''}">
+      <div class="item-top"><span class="item-num">${idx+1}</span><div class="item-txt">${esc(it[0])}${norma}</div></div>
+      <div class="seg">${segs}</div>${valorInp}
+      <input class="item-obs" data-obs="${id}" value="${esc(d.obs||'')}" placeholder="Observações...">
+    </div>`));
+  });
+  body.appendChild(renderFotos(sec.id));
+  body.addEventListener('change',e=>{
+    if(e.target.type==='radio'){ const id=e.target.name.slice(3); estado.itens[id]=estado.itens[id]||{s:'',obs:'',val:''}; estado.itens[id].s=e.target.value; agendarSalvar(); atualizarResumo(); }
+  });
+  body.addEventListener('input',e=>{
+    const ido=e.target.getAttribute('data-obs'), idv=e.target.getAttribute('data-val');
+    if(ido){ estado.itens[ido]=estado.itens[ido]||{s:'',obs:'',val:''}; estado.itens[ido].obs=e.target.value; agendarSalvar(); }
+    if(idv){ estado.itens[idv]=estado.itens[idv]||{s:'',obs:'',val:''}; estado.itens[idv].val=e.target.value; agendarSalvar(); }
+  });
+  return secao;
+}
+
+function renderFotos(secaoId){
+  const wrap=el(`<div class="fotos" data-fotos="${secaoId}">
+    <div class="fotos-cab">
+      <div class="tt">Registro fotográfico <span class="cnt" data-fcnt="${secaoId}">0</span></div>
+    </div>
+    <div class="fotos-btns">
+      <button class="fb cam" onclick="abrirCamera('${secaoId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Câmera</button>
+      <button class="fb" onclick="abrirGaleria('${secaoId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Dispositivo</button>
+    </div>
+    <div class="galeria" data-galeria="${secaoId}"></div>
+  </div>`);
+  return wrap;
+}
+
+function renderGaleria(secaoId){
+  const g=document.querySelector(`[data-galeria="${secaoId}"]`); if(!g)return;
+  const lista=imagens.filter(i=>i.secaoId===secaoId);
+  const cnt=document.querySelector(`[data-fcnt="${secaoId}"]`); if(cnt) cnt.textContent=lista.length;
+  if(lista.length===0){ g.innerHTML=`<div class="fotos-vazio" style="grid-column:1/-1">Nenhuma foto nesta seção ainda.</div>`; return; }
+  g.innerHTML='';
+  lista.forEach(img=>{
+    const card=el(`<div class="foto-card">
+      <div class="imgwrap"><img src="${img.dataUrl}" alt=""><button class="del" title="Remover">×</button></div>
+      <input class="legenda" placeholder="Legenda da foto..." value="${esc(img.legenda||'')}">
+    </div>`);
+    card.querySelector('.del').onclick=()=>removerImagem(img);
+    const leg=card.querySelector('.legenda');
+    let t=null;
+    // Salva a legenda diretamente no array e dispara a atualização no banco em bloco
+    leg.addEventListener('input',()=>{ 
+      img.legenda=leg.value; 
+      clearTimeout(t); 
+      t=setTimeout(()=> agendarSalvar(), 500); 
+    });
+    g.appendChild(card);
+  });
+}
+
+function toggleSecao(head){ head.parentElement.classList.toggle('aberta'); }
+function abrirSecoes(a){ document.querySelectorAll('.secao').forEach(s=>s.classList.toggle('aberta',a)); }
+
+/* =====================================================================
+   FOTOS — captura (câmera/galeria), compressão e upload
+   ===================================================================== */
+let secaoUpload=null;
+function abrirCamera(secaoId){ secaoUpload=secaoId; document.getElementById('camInput').click(); }
+function abrirGaleria(secaoId){ secaoUpload=secaoId; document.getElementById('galInput').click(); }
+
+document.getElementById('camInput').addEventListener('change',e=>processarArquivos(e.target.files, e.target));
+document.getElementById('galInput').addEventListener('change',e=>processarArquivos(e.target.files, e.target));
+
+async function processarArquivos(files, inputEl){
+  const secaoId=secaoUpload; if(!secaoId||!files||!files.length){ return; }
+  toast('Processando '+files.length+' foto(s)…');
+  for(const f of Array.from(files)){
+    try{
+      const dataUrl=await comprimirImagem(f);
+      await enviarImagem(secaoId, dataUrl);
+    }catch(err){ toast('Erro ao processar imagem'); }
+  }
+  renderGaleria(secaoId);
+  if(inputEl) inputEl.value='';
+}
+
+function comprimirImagem(file, maxDim=1400, quality=0.68){
+  return new Promise((res,rej)=>{
+    const rdr=new FileReader();
+    rdr.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width, h=img.height;
+        if(w>h && w>maxDim){ h=Math.round(h*maxDim/w); w=maxDim; }
+        else if(h>=w && h>maxDim){ w=Math.round(w*maxDim/h); h=maxDim; }
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',quality)); // Output sempre JPEG, conforme a policy exige
+      };
+      img.onerror=rej; img.src=rdr.result;
+    };
+    rdr.onerror=rej; rdr.readAsDataURL(file);
+  });
+}
+
+async function enviarImagem(secaoId, dataUrl){
+  const local={ secaoId, legenda:'', dataUrl, _pendente:true };
+  imagens.push(local);
+  renderGaleria(secaoId);
+  try{
+    const salvo=await API.addImg({ usuario, secaoId, legenda:'', dataUrl });
+    local._id = salvo._id; 
+    local.dataUrl = salvo.dataUrl; // Substitui o base64 pela URL oficial do bucket
+    delete local._pendente;
+    agendarSalvar(); // Garante que a URL pública é salva na tabela checklists
+    setSync('ok','Sincronizado');
+  }catch(e){
+    pendentesImg.push(local);
+    setSync('off','Foto guardada — reenviar quando online');
+  }
+}
+
+async function removerImagem(img){
+  if(!confirm('Remover esta foto?')) return;
+  imagens=imagens.filter(i=>i!==img);
+  renderGaleria(img.secaoId);
+  agendarSalvar(); // Remove do array no supabase
+  if(img._id && !img._pendente){ try{ await API.delImg(img._id); }catch(e){} }
+}
+
+/* reenvio de fotos pendentes quando volta a conexão */
+async function reenviarPendentes(){
+  if(!pendentesImg.length) return;
+  const fila=[...pendentesImg]; pendentesImg=[];
+  for(const local of fila){
+    try{ 
+      const s=await API.addImg({usuario,secaoId:local.secaoId,legenda:local.legenda||'',dataUrl:local.dataUrl}); 
+      local._id=s._id; local.dataUrl=s.dataUrl; delete local._pendente; 
+    }catch(e){ pendentesImg.push(local); }
+  }
+  if(!pendentesImg.length){ setSync('ok','Sincronizado'); agendarSalvar(); document.querySelectorAll('[data-galeria]').forEach(g=>renderGaleria(g.getAttribute('data-galeria'))); }
+}
+
+/* =====================================================================
+   SALVAMENTO (API + cache)
+   ===================================================================== */
+let salvarTimer=null;
+function agendarSalvar(){ salvarCache(); clearTimeout(salvarTimer); salvarTimer=setTimeout(()=>salvarAgora(),700); }
+async function salvarAgora(silent){
+  if(!usuario) return;
+  salvarCache();
+  try{
+    await API.put(usuario, { meta: estado.meta, itens: estado.itens, imagens: imagens });
+    if(!silent) setSync('ok','Sincronizado');
+    reenviarPendentes();
+  }catch(e){ setSync('off','Offline — salvo localmente'); }
+}
+function salvarManual(){ salvarAgora(); toast('Dados salvos ✓'); }
+
+function setSync(estadoc,txt){
+  const s=document.getElementById('sync'); s.className='sync'+(estadoc==='off'?' off':estadoc==='err'?' err':'');
+  document.getElementById('syncTx').textContent=txt;
+}
+
+/* =====================================================================
+   RESUMO / CONFORMIDADE
+   ===================================================================== */
+function contagens(){
+  let ok=0,parcial=0,nao=0,na=0,total=0,preenchidos=0; const porSecao={};
+  SECOES.forEach(sec=>{
+    if(sec.tipo!=='check')return;
+    porSecao[sec.id]={feitos:0,total:sec.itens.length};
+    sec.itens.forEach((it,idx)=>{
+      total++; const d=estado.itens[sec.id+'_'+idx];
+      if(d&&d.s){ preenchidos++; porSecao[sec.id].feitos++;
+        if(d.s==='conforme')ok++; else if(d.s==='parcial')parcial++; else if(d.s==='nao')nao++; else if(d.s==='na')na++; }
+    });
+  });
+  return {ok,parcial,nao,na,total,preenchidos,porSecao};
+}
+function atualizarResumo(){
+  const c=contagens();
+  document.getElementById('stOk').textContent=c.ok;
+  document.getElementById('stParcial').textContent=c.parcial;
+  document.getElementById('stNao').textContent=c.nao;
+  document.getElementById('stNa').textContent=c.na;
+  const avaliados=c.ok+c.parcial+c.nao;
+  document.getElementById('confVal').textContent = avaliados?Math.round(c.ok/avaliados*100)+'%':'—';
+  const pct=c.total?Math.round(c.preenchidos/c.total*100):0;
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progNum').textContent=pct+'% preenchido';
+  for(const sid in c.porSecao){ const s=c.porSecao[sid];
+    const mini=document.querySelector(`[data-mini="${sid}"]`); const lab=document.querySelector(`[data-prog="${sid}"]`);
+    if(mini) mini.style.width=(s.total?s.feitos/s.total*100:0)+'%';
+    if(lab) lab.textContent=s.feitos+'/'+s.total;
+  }
+  document.querySelectorAll('[data-galeria]').forEach(g=>{ const sid=g.getAttribute('data-galeria'); const n=imagens.filter(i=>i.secaoId===sid).length; const c2=document.querySelector(`[data-fcnt="${sid}"]`); if(c2)c2.textContent=n; if(!g.children.length) renderGaleria(sid); });
+}
+
+/* =====================================================================
+   BRASÃO (logo local)
+   ===================================================================== */
+document.getElementById('logoInput').addEventListener('change',function(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{ logoLocal=r.result; aplicarLogo(r.result); try{localStorage.setItem('cme_logo',r.result);}catch(x){} toast('Brasão inserido'); };
+  r.readAsDataURL(f);
+});
+function aplicarLogo(src){
+  const box=document.getElementById('brasaoBox'); box.querySelector('.mono')?.remove();
+  const add=box.querySelector('.add'); let img=box.querySelector('img');
+  if(!img){ img=document.createElement('img'); box.insertBefore(img,add||null); }
+  img.src=src;
+}
+
+/* =====================================================================
+   REGISTROS (painel do coordenador)
+   ===================================================================== */
+async function abrirRegistros(){
+  const modal=document.getElementById('modalReg'); const lista=document.getElementById('regLista');
+  lista.innerHTML='<div class="fotos-vazio">Carregando…</div>'; modal.classList.add('show');
+  try{
+    const todos=await API.todos();
+    if(!todos.length){ lista.innerHTML='<div class="fotos-vazio">Nenhum registro ainda.</div>'; return; }
+    const totalItens=SECOES.filter(s=>s.tipo==='check').reduce((a,s)=>a+s.itens.length,0);
+    lista.innerHTML=todos.map(d=>{
+      const itens=d.itens||{}; const feitos=Object.values(itens).filter(x=>x&&x.s).length;
+      const pct=totalItens?Math.round(feitos/totalItens*100):0;
+      const emp=(d.meta&&d.meta.empresa)?d.meta.empresa:'—';
+      const dt=d.atualizado_em?new Date(d.atualizado_em).toLocaleString('pt-BR'):'—'; // Ajustado para atualizado_em do PG
+      return `<div class="reg">
+        <div class="av" style="background:${corAvatar(d.usuario)}">${iniciais(d.usuario)}</div>
+        <div class="info"><div class="n">${esc(d.usuario)}</div><div class="d">${esc(emp)} · ${feitos}/${totalItens} itens · ${dt}</div></div>
+        <div class="pc">${pct}%</div>
+      </div>`;
+    }).join('');
+  }catch(e){ lista.innerHTML='<div class="fotos-vazio">Sem conexão com o servidor.</div>'; }
+}
+function fecharRegistros(){ document.getElementById('modalReg').classList.remove('show'); }
+
+/* =====================================================================
+   RELATÓRIO / PDF
+   ===================================================================== */
+function gerarRelatorio(){
+  const m=estado.meta, c=contagens();
+  const brz=logoLocal?`<div class="brz"><img src="${logoLocal}"></div>`:`<div class="brz"><span class="mono">GOV<br>PA</span></div>`;
+  let h=`<div class="rel-header">${brz}<div class="ht">
+      <div class="l1">Governo do Estado do Pará</div>
+      <div class="l2">SESPA — Secretaria de Estado de Saúde Pública</div>
+      <div class="l3">Engenharia Clínica · Levantamento para Termo de Referência</div>
+    </div></div>
+    <div class="rel-faixa"></div>
+    <div class="rel-titulo">Relatório de Visita Técnica — Central de Material e Esterilização (CME)</div>
+    <div class="rel-sub">Responsável pelo preenchimento: <b>${esc(usuario||'—')}</b> · Base normativa: RDC 50/2002 · RDC 15/2012 · NBR 7256 · NBR 13534 · NR-10 · NR-13 · NR-32 · NBR ISO 17665/15883/11140/11138</div>
+    <table class="rel-meta"><tbody>
+      ${lm('Empresa visitada',m.empresa)}${lm('CNPJ',m.cnpj)}${lm('Endereço',m.endereco)}${lm('Cidade / UF',m.cidade)}
+      ${lm('Data da visita',fmtData(m.data))}${lm('Horário',m.hora)}${lm('Classificação do CME',m.classe)}${lm('Modelo de operação',m.modelo)}
+      ${lm('Responsável Técnico (empresa)',m.rt)}${lm('Acompanhante(s) pela empresa',m.acomp)}${lm('Engenheiro Clínico responsável',m.engclinico)}
+      ${lm('Equipe técnica SESPA',m.equipe)}${lm('Objetivo e observações',m.objetivo)}
+    </tbody></table>`;
+
+  SECOES.forEach(sec=>{
+    if(sec.tipo!=='check')return;
+    let linhas='';
+    sec.itens.forEach((it,idx)=>{
+      const d=estado.itens[sec.id+'_'+idx]||{s:'',obs:'',val:''};
+      const sitCls=d.s?'sit-'+d.s:'sit-vazio'; let obs=esc(d.obs||'');
+      if(d.val) obs=(obs?obs+' · ':'')+'<b>'+esc(d.val)+'</b>';
+      linhas+=`<tr><td class="c-item">${esc(it[0])}</td><td class="c-norma">${esc(it[1]||'—')}</td><td class="c-sit ${sitCls}">${STATUS_REL[d.s||'']}</td><td class="c-obs">${obs||'—'}</td></tr>`;
+    });
+    const fotos=imagens.filter(i=>i.secaoId===sec.id);
+    let blocoFotos='';
+    if(fotos.length){
+      blocoFotos=`<div class="rel-fotos-tt">Registro fotográfico (${fotos.length})</div><div class="rel-fotos">`+
+        fotos.map((f,i)=>`<figure><img src="${f.dataUrl}"><figcaption>Foto ${i+1}${f.legenda?': '+esc(f.legenda):''}</figcaption></figure>`).join('')+`</div>`;
+    }
+    h+=`<div class="rel-secao"><h2>${sec.cod} · ${esc(sec.titulo)}</h2>
+      <table class="rel-tab"><thead><tr><th class="c-item">Item verificado</th><th class="c-norma">Norma</th><th class="c-sit">Situação</th><th class="c-obs">Observações / valor</th></tr></thead>
+      <tbody>${linhas}</tbody></table>${blocoFotos}</div>`;
+  });
+
+  const avaliados=c.ok+c.parcial+c.nao; const indice=avaliados?Math.round(c.ok/avaliados*100):0;
+  h+=`<div class="rel-resumo"><h3>Síntese da conformidade</h3>
+      <div class="linha"><span>Itens Conformes</span><b>${c.ok}</b></div>
+      <div class="linha"><span>Itens Parcialmente conformes</span><b>${c.parcial}</b></div>
+      <div class="linha"><span>Itens Não conformes</span><b>${c.nao}</b></div>
+      <div class="linha"><span>Itens Não aplicáveis (N/A)</span><b>${c.na}</b></div>
+      <div class="linha"><span>Itens avaliados / total</span><b>${c.preenchidos} de ${c.total}</b></div>
+      <div class="linha total"><span>Índice de conformidade (exclui N/A)</span><span>${avaliados?indice+'%':'—'}</span></div>
+    </div>
+    <div class="rel-assin"><div class="a"><div class="ln"></div>Engenheiro(a) Clínico(a) — SESPA</div><div class="a"><div class="ln"></div>Responsável Técnico — Empresa visitada</div></div>
+    <div class="rel-foot">Documento gerado pelo Checklist de Visita Técnica CME · SESPA · Preenchido por ${esc(usuario||'—')} · Emitido em ${new Date().toLocaleString('pt-BR')}</div>`;
+  document.getElementById('relatorio').innerHTML=h;
+}
+function lm(k,v){ return `<tr><td class="k">${k}</td><td>${esc(v||'—')}</td></tr>`; }
+function fmtData(d){ if(!d)return''; const p=d.split('-'); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d; }
+
+function exportarPDF(){
+  salvarAgora(true); gerarRelatorio();
+  toast('Abrindo impressão — escolha “Salvar em PDF”');
+  setTimeout(()=>window.print(),350);
+}
+
+/* =====================================================================
+   TOAST + INIT
+   ===================================================================== */
+let toastTimer=null;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200); }
+
+window.addEventListener('online', ()=>{ setSync('ok','Reconectado'); salvarAgora(true); reenviarPendentes(); });
+window.addEventListener('offline',()=>setSync('off','Offline — salvando localmente'));
+window.addEventListener('beforeunload', ()=>{ if(usuario) salvarCache(); });
+
+(function init(){
+  montarGate();
+  try{ const lg=localStorage.getItem('cme_logo'); if(lg){ logoLocal=lg; } }catch(e){}
+  let anterior=null; try{ anterior=localStorage.getItem('cme_usuario_atual'); }catch(e){}
+  if(anterior){ entrar(anterior); } // reentra automaticamente
+})();
+</script>
+</body>
+</html>
